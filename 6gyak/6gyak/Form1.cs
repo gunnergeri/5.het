@@ -10,12 +10,14 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Xml;
 using _6gyak.Entities;
+using _6gyak.MNBServiceReference;
 
 namespace _6gyak
 {
     public partial class Form1 : Form
     {
         BindingList<Ratedata> rates = new BindingList<Ratedata>();
+        
 
         private string result;
 
@@ -23,20 +25,24 @@ namespace _6gyak
         {
 
             InitializeComponent();
-
             Harmadik();
             Otodik();
             Hatodik();
 
+
+
+
         }
+
+        
 
         private void Harmadik()
         {
            
 
-            var mnbService = new MNBServiceReference.MNBArfolyamServiceSoapClient();
+            var mnbService = new MNBArfolyamServiceSoapClient();
 
-            var request = new MNBServiceReference.GetExchangeRatesRequestBody()
+            var request = new GetExchangeRatesRequestBody()
             {
                 currencyNames = "EUR",
                 startDate = "2020-01-01",
@@ -54,22 +60,21 @@ namespace _6gyak
             var xml = new XmlDocument();
             xml.LoadXml(result);
 
-            // Végigmegünk a dokumentum fő elemének gyermekein
+            
             foreach (XmlElement element in xml.DocumentElement)
             {
-                // Létrehozzuk az adatsort és rögtön hozzáadjuk a listához
-                // Mivel ez egy referencia típusú változó, megtehetjük, hogy előbb adjuk a listához és csak később töltjük fel a tulajdonságait
+               
                 var rate = new Ratedata();
                 rates.Add(rate);
 
-                // Dátum
+               
                 rate.Date = DateTime.Parse(element.GetAttribute("date"));
 
-                // Valuta
+                
                 var childElement = (XmlElement)element.ChildNodes[0];
                 rate.Currency = childElement.GetAttribute("curr");
 
-                // Érték
+               
                 var unit = decimal.Parse(childElement.GetAttribute("unit"));
                 var value = decimal.Parse(childElement.InnerText);
                 if (unit != 0)
@@ -96,7 +101,7 @@ namespace _6gyak
             chartArea.AxisY.IsStartedFromZero = false;
         }
 
+       
 
-
-}
+    }
 }
