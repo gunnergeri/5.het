@@ -12,10 +12,16 @@ namespace _6gyak
 {
     public partial class Form1 : Form
     {
-        
+        BindingList<Entities.Ratedata> rates = new BindingList<Entities.Ratedata>();
+
 
         public Form1()
         {
+
+            InitializeComponent();
+            
+            dataGridView1.DataSource = rates;
+
             var mnbService = new MNBServiceReference.MNBArfolyamServiceSoapClient();
 
             var request = new MNBServiceReference.GetExchangeRatesRequestBody()
@@ -29,9 +35,12 @@ namespace _6gyak
 
             var result = response.GetExchangeRatesResult;
 
+            
+            
 
-            InitializeComponent();
         }
+
+
 
         
     }
