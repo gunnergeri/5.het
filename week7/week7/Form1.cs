@@ -24,7 +24,7 @@ namespace week7
             Population = GetPopulation(@"C:\Temp\nép.csv");
             BirthProbabilities = GetBirthProbabilities(@"C:\Temp\születés.csv");
             DeathProbabilities = GetDeathProbabilities(@"C:\Temp\halál.csv");
-            Random rng = new Random(1234);
+            
 
             for (int year = 2005; year <= 2024; year++)
             {
@@ -50,6 +50,17 @@ namespace week7
         {
             throw new NotImplementedException();
         }
+
+        public class Randomka
+        {
+            
+
+            public Randomka()
+            {
+                Random rng = new Random(1234);
+            }
+        }
+
 
         public List<Person> GetPopulation(string csvpath)
         {
@@ -114,6 +125,42 @@ namespace week7
             return DeathProbabilities;
         }
 
-        
+        private void SimStep(int year, Person person)
+        {
+            //Ha halott akkor kihagyjuk, ugrunk a ciklus következő lépésére
+            if (!person.IsAlive) return;
+
+            // Letároljuk az életkort, hogy ne kelljen mindenhol újraszámolni
+            byte age = (byte)(year - person.BirthYear);
+
+            // Halál kezelése
+            // Halálozási valószínűség kikeresése
+            double pDeath = (from x in DeathProbabilities
+                             where x.Gender == person.Gender && x.Kor == age
+                             select x.Halvszinuseg).FirstOrDefault();
+            // Meghal a személy?
+            if (rng.NextDouble() <= pDeath)
+                person.IsAlive = false;
+
+            //Születés kezelése - csak az élő nők szülnek
+            if (person.IsAlive && person.Gender == Gender.Female)
+            {
+                //Szülési valószínűség kikeresése
+                double pBirth = (from x in BirthProbabilities
+                                 where x.Kor == age
+                                 select x.Vszinuseg).FirstOrDefault();
+                //Születik gyermek?
+                if (rng.NextDouble() <= pBirth)
+                {
+                    Person újszülött = new Person();
+                    újszülött.BirthYear = year;
+                    újszülött.NbrOfChildren = 0;
+                    újszülött.Gender = (Gender)(rng.Next(1, 3));
+                    Population.Add(újszülött);
+                }
+            }
+        }
+
+
     }
 }
