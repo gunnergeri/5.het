@@ -23,7 +23,7 @@ namespace week8.Abstractions
             DrawImage(e.Graphics);
         }
 
-        internal abstract void DrawImage(Graphics graphics);
+        protected abstract void DrawImage(Graphics g);
 
         public virtual void MoveToy()
         {
