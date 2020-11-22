@@ -43,8 +43,13 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnitTestExample, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\week09\UnitTestExample\bin\Debug\UnitTestExample.exe</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountControllerTestFixture.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
